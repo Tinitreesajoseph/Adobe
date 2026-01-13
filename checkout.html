@@ -6,7 +6,132 @@
   <title>Checkout | E‑commerce Starter</title>
   <link rel="stylesheet" href="styles.css" />
   <script>window.dataLayer = window.dataLayer || []; window.digitalData = window.digitalData || {};</script>
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[]; w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'}); var f=d.getElementsByTagName(s)[0], j=d.createElement(s), dl=l!='dataLayer'?'&l='+l:''; j.async=true; j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl; f.parentNode.insertBefore(j,f);})(window, document, 'script', 'dataLayer', 'GTM-PCDW7MXD');</script>
+  
+<script>
+  (function(){
+    // ---- Page context (keep object structure as you requested) ----
+    window.digitalData.page = {
+      pageInfo: {
+        pageName:'checkout',
+        title:'Checkout | E‑commerce Starter',
+        destinationURL: location.href,
+        referringURL: document.referrer || '',
+        internalPageName:'checkout',
+        pageID:'ga4-starter:checkout',
+        sysEnv: navigator.userAgent || ''
+      },
+      category:{ type:'checkout', primaryCategory:'checkout' },
+      language:'en'
+    };
+
+    // GTM page context
+    window.dataLayer.push({
+      event:'page_context',
+      page_name: window.digitalData.page.pageInfo.pageName,
+      page_title: window.digitalData.page.pageInfo.title,
+      page_category: window.digitalData.page.category.primaryCategory,
+      page_id: window.digitalData.page.pageInfo.pageID,
+      page_language: window.digitalData.page.language
+    });
+
+    // ---- Order summary rendering + checkout events ----
+    const summaryEl = document.getElementById('order-summary');
+
+    // Pull GA4-style items from your cart helper (defined in app.js/catalog.js)
+    const items = (window.Cart && typeof window.Cart.ga4Items === 'function') ? window.Cart.ga4Items() : [];
+    let total = 0;
+    items.forEach(i => {
+      const price = Number(i.price) || 0;
+      const qty = Number(i.quantity) || 1;
+      total += price * qty;
+    });
+
+    // Render summary (UI only)
+    if (summaryEl) {
+      const lines = items.map(i => {
+        const price = Number(i.price) || 0;
+        const qty = Number(i.quantity) || 1;
+        const line = price * qty;
+        const name = i.item_name || i.name || i.item_id || 'Item';
+        return `<div>${name} x ${qty} — ₹${line}</div>`;
+      }).join('');
+      summaryEl.innerHTML =
+        `<h3>Order Summary</h3>${lines || '<em>No items in cart.</em>'}` +
+        `<hr/><strong>Total: ₹${total}</strong>`;
+    }
+
+    // Push begin_checkout with items
+    window.dataLayer.push({
+      event: 'begin_checkout',
+      currency: 'INR',
+      value: total,
+      items: items
+    });
+
+    // ---- Button bindings: shipping, payment, purchase ----
+    const shipBtn = document.getElementById('save-shipping');
+    const payBtn  = document.getElementById('save-payment');
+    const placeBtn= document.getElementById('place-order');
+
+    if (shipBtn) {
+      shipBtn.addEventListener('click', function(){
+        // Do not push PII; only shipping tier/summary data
+        window.dataLayer.push({
+          event: 'add_shipping_info',
+          shipping_tier: 'Standard',
+          currency: 'INR',
+          value: total,
+          items: items
+        });
+        alert('Shipping info saved (demo).');
+      });
+    }
+
+    if (payBtn) {
+      payBtn.addEventListener('click', function(){
+        // Do not push card details; only payment type
+        window.dataLayer.push({
+          event: 'add_payment_info',
+          payment_type: 'Card',
+          currency: 'INR',
+          value: total,
+          items: items
+        });
+        alert('Payment info saved (demo).');
+      });
+    }
+
+    if (placeBtn) {
+      placeBtn.addEventListener('click', function(){
+        // Generate a simple transaction id for demo
+        const txnId = 'TXN_' + Date.now();
+
+        // Push GA4 purchase event
+        window.dataLayer.push({
+          event: 'purchase',
+          transaction_id: txnId,
+          currency: 'INR',
+          value: total,
+          tax: 0,            // Add actual tax if applicable
+          shipping: 0,       // Add shipping cost if available
+          coupon: undefined, // Include coupon code if used
+          items: items
+        });
+
+        // Clear cart and redirect (demo behavior)
+        if (window.Cart && typeof window.Cart.clear === 'function') {
+          window.Cart.clear();
+        }
+        alert('Order placed! (demo)');
+        // Typically redirect to a thank-you page:
+        // location.href = 'thankyou.html?order=' + encodeURIComponent(txnId);
+        // For your current flow:
+        location.href = 'index.html';
+      });
+    }
+  })();
+</script>
+
 </head>
 <body>
   <header>
