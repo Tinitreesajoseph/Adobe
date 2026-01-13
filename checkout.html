@@ -14,9 +14,9 @@
       <h1>E‑commerce Starter</h1>
       <nav class="site-nav">
         <a href="index.html">Home</a>
-        <a href="t-shirts/index.html">T‑Shirts</a>
-        <a href="sneakers/index.html">Sneakers</a>
-        <a href="backpacks/index.html">Backpacks</a>
+        <a href="t-shirtsindex.html">T‑Shirts</a>
+        <a href="sneakerindex.html">Sneakers</a>
+        <a href="backpackindex.html">Backpacks</a>
         <a href="about.html" class="nav-link">About Us</a>
         <a href="contact.html" class="nav-link">Contact</a>
         <a href="cart.html" class="nav-link">Cart</a>
@@ -68,8 +68,8 @@
   <script src="app.js"></script>
   <script>
     (function(){
-      window.digitalData.page = { pageInfo: { pageName:'checkout', title:'Checkout | GA4 E‑commerce Starter', destinationURL: location.href, referringURL: document.referrer, internalPageName:'checkout', pageID:'ga4-starter:checkout', sysEnv:navigator.userAgent }, category:{ type:'checkout', primaryCategory:'checkout' }, language:'en' };
-      dataLayer.push({ event:'page_context', page_name:'checkout', page_title:'Checkout | GA4 E‑commerce Starter', page_category:'checkout', page_id:'ga4-starter:checkout' });
+      window.digitalData.page = { pageInfo: { pageName:'checkout', title:'Checkout | E‑commerce Starter', destinationURL: location.href, referringURL: document.referrer, internalPageName:'checkout', pageID:'ga4-starter:checkout', sysEnv:navigator.userAgent }, category:{ type:'checkout', primaryCategory:'checkout' }, language:'en' };
+      dataLayer.push({ event:'page_context', page_name:'checkout', page_title:'Checkout | E‑commerce Starter', page_category:'checkout', page_id:'ga4-starter:checkout' });
 
       const summary = document.getElementById('order-summary');
       const items = window.Cart.ga4Items();
