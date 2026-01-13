@@ -38,28 +38,73 @@
   </header>
 
   <!-- Page Context -->
+    <!-- Page Context -->
   <script>
-    window.digitalData.page = {
-      pageInfo: {
-        pageName: 'home',
-        title: 'Home | E‑commerce Starter',
-        destinationURL: location.href,
-        referringURL: document.referrer,
-        internalPageName: 'home',
-        pageID: 'ga4-starter:home',
-        sysEnv: navigator.userAgent
+    // Convert to array-based digitalData.page with [0].pageInfo
+    window.digitalData.page = [
+      {
+        pageInfo: {
+          pageName: 'home',
+          title: 'Home | E commerce Starter',
+          destinationURL: location.href,
+          referringURL: document.referrer || '',
+          internalPageName: 'home',
+          pageID: 'ga4-starter:home',
+          sysEnv: navigator.userAgent || ''
+        },
+        category: {
+          type: 'landing',
+          primaryCategory: 'home'
+        },
+        language: 'en',
+        attributes: {
+          // Optional page-level flags often referenced in BRD/SDR
+          authenticatedState: 'unauthenticated', // or 'authenticated'
+          country: 'IN',
+          currencyCode: 'INR'
+        }
+      }
+    ];
+
+    // Optional Adobe mapping vars (placeholders: align with your SDR)
+    window.digitalData.adobe = {
+      // These are examples—map to your SDR:
+      evars: {
+        eVar1: window.digitalData.page[0].pageInfo.pageName,     // Page Name
+        eVar2: window.digitalData.page[0].category.primaryCategory, // Primary Category
+        eVar3: window.digitalData.page[0].pageInfo.pageID,       // Page ID
+        eVar4: window.digitalData.page[0].attributes.currencyCode // Currency
       },
-      category: { type: 'landing', primaryCategory: 'home' },
-      language: 'en'
+      props: {
+        prop1: window.digitalData.page[0].pageInfo.title,        // Page Title
+        prop2: window.digitalData.page[0].pageInfo.destinationURL // URL
+      },
+      events: ['event1'] // e.g., Page View
     };
-    dataLayer.push({
+
+    // GTM-friendly page context push derived from digitalData
+    window.dataLayer.push({
       event: 'page_context',
-      page_name: window.digitalData.page.pageInfo.pageName,
-      page_title: window.digitalData.page.pageInfo.title,
-      page_category: window.digitalData.page.category.primaryCategory,
-      page_id: window.digitalData.page.pageInfo.pageID
+      page_name: window.digitalData.page[0].pageInfo.pageName,
+      page_title: window.digitalData.page[0].pageInfo.title,
+      page_category: window.digitalData.page[0].category.primaryCategory,
+      page_id: window.digitalData.page[0].pageInfo.pageID,
+      page_language: window.digitalData.page[0].language,
+      // Useful for KBR/KPI implementation tracking
+      kbr: { // Key Business Requirements (logical grouping)
+        pageview_logged: true
+      },
+      kpi: { // Key Performance Indicators
+        engagement_type: 'landing',
+        country: window.digitalData.page[0].attributes.country,
+        currency: window.digitalData.page[0].attributes.currencyCode
+      },
+      brd_ref: 'BRD-ECOM-001', // Your BRD reference ID (replace)
+      sdr_ref: 'SDR-ADBE-Home', // Your SDR mapping ID (replace)
+      adobe_vars: window.digitalData.adobe // Expose for Adobe Launch rules if needed
     });
   </script>
+
 
   <!-- Main -->
   <main class="container">
