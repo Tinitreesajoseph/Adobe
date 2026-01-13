@@ -132,57 +132,7 @@
   })();
 </script>
 
-<script>
-  (function(){
-    // ... your existing page_context, summary render, begin_checkout, etc.
 
-    document.getElementById('place-order')?.addEventListener('click', function(){
-      // Generate and persist order id
-      const orderId = window.generateOrderId();
-      window.saveLastOrderId(orderId);
-
-      // Prepare items & totals
-      const items = window.Cart.ga4Items();
-      const total = window.Cart.total();
-
-      // Optional Adobe-friendly digitalData transaction object
-      window.digitalData.transaction = {
-        transactionID: orderId,
-        currency: 'INR',
-        total: total,
-        paymentMethod: 'Card',             // or set from your payment flow
-        shippingMethod: 'Standard',        // or set from your shipping flow
-        items: items.map(i => ({
-          product: {
-            sku: i.item_id,
-            name: i.item_name,
-            category: i.item_category
-          },
-          price: i.price,
-          quantity: i.quantity
-        }))
-      };
-
-      // GA4 purchase push with order id
-      window.dataLayer.push({
-        event: 'purchase',
-        transaction_id: orderId,
-        currency: 'INR',
-        value: total,
-        tax: 0,
-        shipping: 0,
-        items
-      });
-
-      // Clear cart and redirect
-      window.Cart.clear();
-      alert(`Order placed! ID: ${orderId}`);
-      // Ideally: redirect to a thank-you page carrying the order id
-      // location.href = 'thankyou.html?order=' + encodeURIComponent(orderId);
-      location.href = 'index.html';
-    });
-  })();
-</script>
 
 </head>
 <body>
