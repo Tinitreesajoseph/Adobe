@@ -33,19 +33,21 @@
     </div>
   </header>
   <script>
+    
     window.digitalData.page = {
       pageInfo: {
-        pageName: 'about',
-        title: 'About Us | GA4 E‑commerce Starter',
+        pageName: 'home',
+        title: 'Home | E‑commerce Starter',
         destinationURL: location.href,
         referringURL: document.referrer,
-        internalPageName: 'about',
-        pageID: 'ga4-starter:about',
+        internalPageName: 'home',
+        pageID: 'ga4-starter:home',
         sysEnv: navigator.userAgent
       },
-      category: { type: 'content', primaryCategory: 'about' },
+      category: { type: 'landing', primaryCategory: 'home' },
       language: 'en'
     };
+
     dataLayer.push({
       event: 'page_context',
       page_name: window.digitalData.page.pageInfo.pageName,
