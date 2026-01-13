@@ -19,6 +19,30 @@
     } catch(e) { /* ignore */ }
   })();
 
+ 
+// --- Order ID utilities (put in app.js) ---
+(function(){
+  function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0;
+      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
+  // Public generator: returns something like ORD-6b0c... (UUID-style)
+  window.generateOrderId = function() {
+    return 'ORD-' + uuidv4();
+  };
+
+  const LS_ORDER_KEY = 'last_order_id';
+  window.saveLastOrderId = function(orderId) {
+    try { localStorage.setItem(LS_ORDER_KEY, orderId); } catch(e) {}
+  };
+  window.getLastOrderId = function() {
+    try { return localStorage.getItem(LS_ORDER_KEY) || ''; } catch(e) { return ''; }
+  };
+})();
 
 
   // ---- Storage helpers ----
