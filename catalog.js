@@ -17,7 +17,7 @@ window.CATALOG = {
     "category": "T‑Shirts",
     "price": 999,
     "currency": "INR",
-    "image": "assets/graphic.jpg",
+    
     "images": ["assets/graphic.jpg"],
     "description": "Bold print tee to elevate your casual style.",
     "variants": { "size": ["S","M","L"], "color": ["Navy","White"] }
