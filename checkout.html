@@ -232,7 +232,13 @@
           alert(`Order placed! (demo) ID: ${orderId}`);
           // In production, redirect to a thank-you page:
           // location.href = 'thankyou.html?order=' + encodeURIComponent(orderId);
-          location.href = 'index.html';
+          
+          // On checkout just before redirect:
+          const snapshot = { orderId, items: itemsGa4, total, currency: 'INR', tax: 0, shipping: 0 };
+          localStorage.setItem('last_purchase', JSON.stringify(snapshot));
+          localStorage.setItem('last_order_id', orderId);
+          // location.href = 'thankyou.html?order=' + encodeURIComponent(orderId);
+
         });
       }
     })();
