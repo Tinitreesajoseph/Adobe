@@ -237,7 +237,7 @@
           const snapshot = { orderId, items: itemsGa4, total, currency: 'INR', tax: 0, shipping: 0 };
           localStorage.setItem('last_purchase', JSON.stringify(snapshot));
           localStorage.setItem('last_order_id', orderId);
-          // location.href = 'thankyou.html?order=' + encodeURIComponent(orderId);
+          location.href = 'thankyou.html?order=' + encodeURIComponent(orderId);
 
         });
       }
