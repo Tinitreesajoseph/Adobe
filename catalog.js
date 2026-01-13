@@ -7,8 +7,7 @@ window.CATALOG = {
     "category": "T‑Shirts",
     "price": 799,
     "currency": "INR",
-    "image": "assets/classic tee.webp",
-    "images": ["assets/classic tee.webp"],
+    "image": "classic tee.webp",
     "description": "Soft cotton tee for everyday comfort.",
     "variants": { "size": ["S","M","L","XL"], "color": ["Black","White"] }
   },
