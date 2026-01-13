@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About Us | E‑commerce Starter</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Data Layer + GTM loader -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    window.digitalData = window.digitalData || {};
+  </script>
+  
+</head>
+<body>
+
+ 
+
+  <header>
+    <div class="container">
+      <h1>E‑commerce Starter</h1>
+      <nav class="site-nav">
+        <a href="index.html">Home</a>
+        <a href="t-shirts/index.html">T‑Shirts</a>
+        <a href="sneakers/index.html">Sneakers</a>
+        <a href="backpacks/index.html">Backpacks</a>
+        <a href="about.html" id="about-link" class="nav-link">About Us</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <a href="cart.html" class="nav-link">Cart</a>
+        <button class="cta" data-cta-location="header" id="shop-now-btn">Shop Now</button>
+      </nav>
+    </div>
+  </header>
+  <script>
+    window.digitalData.page = {
+      pageInfo: {
+        pageName: 'about',
+        title: 'About Us | GA4 E‑commerce Starter',
+        destinationURL: location.href,
+        referringURL: document.referrer,
+        internalPageName: 'about',
+        pageID: 'ga4-starter:about',
+        sysEnv: navigator.userAgent
+      },
+      category: { type: 'content', primaryCategory: 'about' },
+      language: 'en'
+    };
+    dataLayer.push({
+      event: 'page_context',
+      page_name: window.digitalData.page.pageInfo.pageName,
+      page_title: window.digitalData.page.pageInfo.title,
+      page_category: window.digitalData.page.category.primaryCategory,
+      page_id: window.digitalData.page.pageInfo.pageID
+    });
+  </script>
+
+  <main class="container">
+    <section>
+      <h2>About Us</h2>
+      <p>We are a demo e‑commerce brand showcasing Adobe best practices for product browsing and conversion tracking. Explore T‑Shirts, Sneakers, and Backpacks categories from the menu.</p>
+    </section>
+  </main>
+
+
+  <footer>
+    <div class="container footer-container">
+      <a href="https://www.adidas.com" class="outbound-link" target="_blank" rel="noopener">Adidas Official</a>
+      <button class="cta" data-cta-location="footer" id="subscribe-btn">Subscribe</button>
+      <p>© 2025 Adobe E‑commerce</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

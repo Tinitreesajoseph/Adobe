@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sneakers | E‑commerce Starter</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    window.digitalData = window.digitalData || {};
+  </script>
+  
+</head>
+<body>
+  
+  <header>
+    <div class="container">
+      <h1>E‑commerce Starter</h1>
+      <nav class="site-nav">
+        <a href="/">Home</a>
+        <a href="/t-shirts/">T‑Shirts</a>
+        <a href="/sneakers/">Sneakers</a>
+        <a href="/backpacks/">Backpacks</a>
+        <a href="/about.html">About Us</a>
+        <a href="/contact.html">Contact</a>
+        <button class="cta" data-cta-location="header" id="shop-now-btn">Shop Now</button>
+      </nav>
+    </div>
+  </header>
+
+  <script>
+    window.digitalData.page = {
+      pageInfo: {
+        pageName: 'category:sneakers',
+        title: 'Sneakers | GA4 E‑commerce Starter',
+        destinationURL: location.href,
+        referringURL: document.referrer,
+        internalPageName: 'sneakers',
+        pageID: 'ga4-starter:category:sneakers',
+        sysEnv: navigator.userAgent
+      },
+      category: { type: 'category', primaryCategory: 'sneakers' },
+      language: 'en'
+    };
+    dataLayer.push({
+      event: 'page_context',
+      page_name: window.digitalData.page.pageInfo.pageName,
+      page_title: window.digitalData.page.pageInfo.title,
+      page_category: window.digitalData.page.category.primaryCategory,
+      page_id: window.digitalData.page.pageInfo.pageID
+    });
+  </script>
+
+  <main class="container">
+    <section class="products" id="products">
+      <h2>Sneakers</h2>
+      <div class="grid">
+
+        <article class="product" data-sku="SN_2001" data-name="Runner Pro" data-category="Sneakers" data-price="2499" data-currency="INR">
+          <a href="../product.html?sku=SN_2001" class="product-link">
+            <img alt="Runner Pro" src="runner.jpg" />
+            <h3>Runner Pro</h3>
+          </a>
+          <p class="price">₹2,499</p>
+          <button class="add-to-cart">Add to Cart</button>
+        </article>
+
+        <article class="product" data-sku="SN_2002" data-name="Street Classic" data-category="Sneakers" data-price="2999" data-currency="INR">
+          <a href="../product.html?sku=SN_2002" class="product-link">
+            <img alt="Street Classic" src="street.webp" />
+            <h3>Street Classic</h3>
+          </a>
+          <p class="price">₹2,999</p>
+          <button class="add-to-cart">Add to Cart</button>
+        </article>
+
+        <article class="product" data-sku="SN_2003" data-name="Court Ace" data-category="Sneakers" data-price="3499" data-currency="INR">
+          <a href="../product.html?sku=SN_2003" class="product-link">
+            <img alt="Court Ace" src="court.avif" />
+            <h3>Court Ace</h3>
+          </a>
+          <p class="price">₹3,499</p>
+          <button class="add-to-cart">Add to Cart</button>
+        </article>
+
+        <article class="product" data-sku="SN_2004" data-name="Trail Grip" data-category="Sneakers" data-price="3999" data-currency="INR">
+          <a href="../product.html?sku=SN_2004" class="product-link">
+            <img alt="Trail Grip" src="trail.webp" />
+            <h3>Trail Grip</h3>
+          </a>
+          <p class="price">₹3,999</p>
+          <button class="add-to-cart">Add to Cart</button>
+        </article>
+
+        <article class="product" data-sku="SN_2005" data-name="Flex Mesh" data-category="Sneakers" data-price="2799" data-currency="INR">
+          <a href="../product.html?sku=SN_2005" class="product-link">
+            <img alt="Flex Mesh" src="flex.webp" />
+            <h3>Flex Mesh</h3>
+          </a>
+          <p class="price">₹2,799</p>
+          <button class="add-to-cart">Add to Cart</button>
+        </article>
+
+        <article class="product" data-sku="SN_2006" data-name="Hi‑Top Vibe" data-category="Sneakers" data-price="3299" data-currency="INR">
+          <a href="../product.html?sku=SN_2006" class="product-link">
+            <img alt="Hi‑Top Vibe" src="hitop.webp" />
+            <h3>Hi‑Top Vibe</h3>
+          </a>
+          <p class="price">₹3,299</p>
+          <button class="add-to-cart">Add to Cart</button>
+        </article>
+
+        <article class="product" data-sku="SN_2007" data-name="Sprint Lite" data-category="Sneakers" data-price="2599" data-currency="INR">
+          <a href="../product.html?sku=SN_2007" class="product-link">
+            <img alt="Sprint Lite" src="sprint.webp" />
+            <h3>Sprint Lite</h3>
+          </a>
+          <p class="price">₹2,599</p>
+          <button class="add-to-cart">Add to Cart</button>
+        </article>
+
+        <article class="product" data-sku="SN_2008" data-name="Retro 90s" data-category="Sneakers" data-price="3199" data-currency="INR">
+          <a href="../product.html?sku=SN_2008" class="product-link">
+            <img alt="Retro 90s" src="retro.png" />
+            <h3>Retro 90s</h3>
+          </a>
+          <p class="price">₹3,199</p>
+          <button class="add-to-cart">Add to Cart</button>
+        </article>
+
+        <article class="product" data-sku="SN_2009" data-name="Ultra Boost" data-category="Sneakers" data-price="4499" data-currency="INR">
+          <a href="../product.html?sku=SN_2009" class="product-link">
+            <img alt="Ultra Boost" src="ultra.webp" />
+            <h3>Ultra Boost</h3>
+          </a>
+          <p class="price">₹4,499</p>
+          <button class="add-to-cart">Add to Cart</button>
+        </article>
+
+      </div>
+
+      <div id="cart-summary"></div>
+      <div class="checkout-actions">
+        <button id="begin-checkout">Begin Checkout</button>
+        <button id="complete-purchase">Complete Purchase</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-container">
+      <a href="https://www.adidas.com" class="outbound-link" target="_blank" rel="noopener">Adidas Official</a>
+      <button class="cta" data-cta-location="footer" id="subscribe-btn">Subscribe</button>
+      <p>© 2025 Adobe E‑commerce</p>
+    </div>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

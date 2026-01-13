@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout | E‑commerce Starter</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script>window.dataLayer = window.dataLayer || []; window.digitalData = window.digitalData || {};</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[]; w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'}); var f=d.getElementsByTagName(s)[0], j=d.createElement(s), dl=l!='dataLayer'?'&l='+l:''; j.async=true; j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl; f.parentNode.insertBefore(j,f);})(window, document, 'script', 'dataLayer', 'GTM-PCDW7MXD');</script>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>E‑commerce Starter</h1>
+      <nav class="site-nav">
+        <a href="index.html">Home</a>
+        <a href="t-shirts/index.html">T‑Shirts</a>
+        <a href="sneakers/index.html">Sneakers</a>
+        <a href="backpacks/index.html">Backpacks</a>
+        <a href="about.html" class="nav-link">About Us</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <a href="cart.html" class="nav-link">Cart</a>
+        <button class="cta" data-cta-location="header" id="shop-now-btn">Shop Now</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section>
+      <h2>Checkout</h2>
+      <div class="checkout-grid">
+        <form id="shipping-form">
+          <h3>Shipping Info</h3>
+          <label>Full Name<input type="text" name="full_name" required /></label>
+          <label>Address<input type="text" name="address" required /></label>
+          <label>City<input type="text" name="city" required /></label>
+          <label>Postal Code<input type="text" name="postal" required /></label>
+          <label>Phone<input type="tel" name="phone" required /></label>
+          <button type="button" id="save-shipping">Save Shipping</button>
+        </form>
+
+        <form id="payment-form">
+          <h3>Payment Info</h3>
+          <label>Card Number<input type="text" name="card" placeholder="1111 2222 3333 4444" required /></label>
+          <label>Expiry<input type="text" name="expiry" placeholder="MM/YY" required /></label>
+          <label>CVV<input type="text" name="cvv" placeholder="123" required /></label>
+          <button type="button" id="save-payment">Save Payment</button>
+        </form>
+      </div>
+
+      <div class="order-summary" id="order-summary"></div>
+      <div class="cart-actions">
+        <a href="cart.html"><button>Back to Cart</button></a>
+        <button id="place-order">Place Order</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-container">
+      <a href="https://www.adidas.com" class="outbound-link" target="_blank" rel="noopener">Adidas Official</a>
+      <button class="cta" data-cta-location="footer" id="subscribe-btn">Subscribe</button>
+      <p>© 2025 Adobe E‑commerce</p>
+    </div>
+  </footer>
+
+  <script src="catalog.js"></script>
+  <script src="app.js"></script>
+  <script>
+    (function(){
+      window.digitalData.page = { pageInfo: { pageName:'checkout', title:'Checkout | GA4 E‑commerce Starter', destinationURL: location.href, referringURL: document.referrer, internalPageName:'checkout', pageID:'ga4-starter:checkout', sysEnv:navigator.userAgent }, category:{ type:'checkout', primaryCategory:'checkout' }, language:'en' };
+      dataLayer.push({ event:'page_context', page_name:'checkout', page_title:'Checkout | GA4 E‑commerce Starter', page_category:'checkout', page_id:'ga4-starter:checkout' });
+
+      const summary = document.getElementById('order-summary');
+      const items = window.Cart.ga4Items();
+      let total = 0; items.forEach(i => total += (i.price||0) * (i.quantity||1));
+      summary.innerHTML = '<h3>Order Summary</h3>' + items.map(i=>`<div>${i.item_name} x ${i.quantity} — ₹${(i.price||0) * (i.quantity||1)}</div>`).join('') + `<hr/><strong>Total: ₹${total}</strong>`;
+
+      dataLayer.push({ event:'begin_checkout', items: items });
+      document.getElementById('save-shipping').addEventListener('click', function(){ dataLayer.push({ event:'add_shipping_info', shipping_tier:'Standard', items: items }); alert('Shipping info saved (demo).'); });
+      document.getElementById('save-payment').addEventListener('click', function(){ dataLayer.push({ event:'add_payment_info', payment_type:'Card', items: items }); alert('Payment info saved (demo).'); });
+      document.getElementById('place-order').addEventListener('click', function(){ const txn = 'TXN_' + Date.now(); dataLayer.push({ event:'purchase', transaction_id: txn, value: total, currency:'INR', items: items }); window.Cart.clear(); alert('Order placed! (demo)'); location.href = 'index.html'; });
+    })();
+  </script>
+</body>
+</html>

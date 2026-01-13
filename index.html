@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Home | E‑commerce Starter</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/styles.css" />
+
+  <!-- Data Layer + GTM loader -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    window.digitalData = window.digitalData || {};
+  </script>
+  
+</head>
+<body>
+
+ 
+
+  <!-- Header & Nav -->
+  <header>
+    <div class="container">
+      <h1>E‑commerce Starter</h1>
+      <nav class="site-nav">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/t-shirts/" class="nav-link">T‑Shirts</a>
+        <a href="/sneakers/" class="nav-link">Sneakers</a>
+        <a href="/backpacks/" class="nav-link">Backpacks</a>
+        <a href="/about.html" class="nav-link">About Us</a>
+        <a href="/contact.html" class="nav-link">Contact</a>
+        <a href="cart.html" class="nav-link">Cart</a>
+        <button class="cta" data-cta-location="header" id="shop-now-btn">Shop Now</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page Context -->
+  <script>
+    window.digitalData.page = {
+      pageInfo: {
+        pageName: 'home',
+        title: 'Home | E‑commerce Starter',
+        destinationURL: location.href,
+        referringURL: document.referrer,
+        internalPageName: 'home',
+        pageID: 'ga4-starter:home',
+        sysEnv: navigator.userAgent
+      },
+      category: { type: 'landing', primaryCategory: 'home' },
+      language: 'en'
+    };
+    dataLayer.push({
+      event: 'page_context',
+      page_name: window.digitalData.page.pageInfo.pageName,
+      page_title: window.digitalData.page.pageInfo.title,
+      page_category: window.digitalData.page.category.primaryCategory,
+      page_id: window.digitalData.page.pageInfo.pageID
+    });
+  </script>
+
+  <!-- Main -->
+  <main class="container">
+
+    <!-- Featured Products (teasers) -->
+    <section class="products" id="featured">
+      <h2>Featured Products</h2>
+      <div class="grid">
+
+        <!-- Teaser items can still trigger select_item; they include product-link -->
+        <article class="product" data-sku="TS_1001" data-name="Classic Tee" data-category="T‑Shirts" data-price="799" data-currency="INR">
+          <a href="product.html?sku=TS_1001" class="product-link">
+            <img src="assets/classic.webp" alt="Classic Tee">
+            <h3>Classic Tee</h3>
+          </a>
+          <p class="price">₹799</p>
+          <button class="add-to-cart">Add to Cart</button>
+        </article>
+
+        <article class="product" data-sku="SN_2001" data-name="Runner Pro" data-category="Sneakers" data-price="2499" data-currency="INR">
+          <a href="product.html?sku=SN_2001" class="product-link">
+            <img src="assets/runner.jpg" alt="Sneakers">
+            <h3>Runner Pro</h3>
+          </a>
+          <p class="price">₹2,499</p>
+          <button class="add-to-cart">Add to Cart</button>
+        </article>
+
+        <article class="product" data-sku="BP_3001" data-name="City Backpack" data-category="Backpacks" data-price="1499" data-currency="INR">
+          <a href="product.html?sku=BP_3001" class="product-link">
+            <img src="assets/city.webp" alt="City Backpack">
+            <h3>City Backpack</h3>
+          </a>
+          <p class="price">₹1,499</p>
+          <button class="add-to-cart">Add to Cart</button>
+        </article>
+
+      </div>
+
+      <div id="cart-summary"></div>
+      <div class="checkout-actions">
+        <button id="begin-checkout">Begin Checkout</button>
+        <button id="complete-purchase">Complete Purchase</button>
+      </div>
+    </section>
+
+    <!-- Create Account -->
+    <section class="account" id="create-account">
+      <h2>Create Account</h2>
+      <form id="signup-form">
+        <label>Full Name
+          <input type="text" name="full_name" required />
+        </label>
+        <label>Email
+          <input type="email" name="email" required />
+        </label>
+        <label>Password
+          <input type="password" name="password" minlength="6" required />
+        </label>
+        <fieldset>
+          <legend>Sign‑up Method</legend>
+          <label><input type="radio" name="signup_method" value="email" checked /> Email</label>
+          <label><input type="radio" name="signup_method" value="google" /> Google</label>
+        </fieldset>
+        <label>Upload ID (File attachment)
+          <input type="file" id="kyc-file" name="kyc_file" accept=".pdf,.jpg,.png" />
+        </label>
+        <button type="submit" class="form-submit">Create Account</button>
+      </form>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact" id="contact">
+      <h2>Contact Us</h2>
+      <form id="contact-form">
+        <label>Subject
+          <input type="text" name="subject" placeholder="Subject" required />
+        </label>
+        <label>Message
+          <textarea name="message" placeholder="Your message" required></textarea>
+        </label>
+        <button type="submit" class="form-submit" data-form-name="contact">Send</button>
+      </form>
+    </section>
+
+    <!-- Video -->
+    <section class="video" id="product-video">
+      <h2>Watch: Our Story</h2>
+      <div class="video-wrapper">
+        <iframe
+          src="https://www.youtube-nocookie.com/embed/VnE7m8JI7MY?si=xz9JUfSabWGUr9uo"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+      <p class="hint">GA4 Enhanced Measurement can track YouTube video events when enabled.</p>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-container">
+      <a href="https://www.adidas.com" class="outbound-link" target="_blank" rel="noopener">Adidas Official</a>
+      <button class="cta" data-cta-location="footer" id="subscribe-btn">Subscribe</button>
+      <p>© 2025 Adobe E‑commerce</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/app.js"></script>
+</body>
+</html>

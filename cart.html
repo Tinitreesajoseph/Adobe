@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cart | E‑commerce Starter</title>
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Data Layer -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    window.digitalData = window.digitalData || {};
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>E‑commerce Starter</h1>
+      <nav class="site-nav">
+        <a href="index.html">Home</a>
+        <a href="t-shirts/index.html">T‑Shirts</a>
+        <a href="sneakers/index.html">Sneakers</a>
+        <a href="backpacks/index.html">Backpacks</a>
+        <a href="about.html" class="nav-link">About Us</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <a href="cart.html" class="nav-link">Cart</a>
+        <button class="cta" data-cta-location="header" id="shop-now-btn">Shop Now</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section>
+      <h2>Your Cart</h2>
+      <table class="cart-table" id="cart-table">
+        <thead>
+          <tr><th>Product</th><th>Price</th><th>Qty</th><th>Total</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="cart-body"></tbody>
+      </table>
+      <div class="cart-summary-box" id="cart-total"></div>
+      <div class="cart-actions">
+        <a class="link-button" href="index.html"><button type="button">Continue Shopping</button></a>
+        <button type="button" id="cart-checkout">Proceed to Checkout</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-container">
+      <a href="https://www.adidas.com" class="outbound-link" target="_blank" rel="noopener">Adidas Official</a>
+      <button class="cta" data-cta-location="footer" id="subscribe-btn">Subscribe</button>
+      <p>© 2025 Adobe E‑commerce</p>
+    </div>
+  </footer>
+
+  <!-- Scripts: catalog FIRST, then app logic, then cart init -->
+  <script src="catalog.js"></script>
+  <script src="app.js"></script>
+  
+
+<script>
+(function(){
+  const KEY = 'demo_cart_v2';
+  const body = document.getElementById('cart-body');
+  const totalBox = document.getElementById('cart-total');
+
+  function render(){
+    const cart = window.Cart.get();
+    body.innerHTML = '';
+    let subtotal = 0;
+
+    cart.items.forEach(function(line){
+      const item = window.CATALOG[line.sku];
+      if (!item) { console.warn('Missing catalog item for SKU:', line.sku); return; }
+
+      const lineTotal = (item.price || 0) * (line.qty || 1);
+      subtotal += lineTotal;
+
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        `<td>
+           <strong>${item.name}</strong><br/>
+           <small>
+             ${line.variant?.size ? 'Size: ' + line.variant.size : ''}
+             ${line.variant?.color ? (line.variant?.size ? ' • ' : '') + 'Color: ' + line.variant.color : ''}
+           </small>
+         </td>` +
+        `<td>₹${item.price}</td>` +
+        `<td>
+           <div style="display:flex;gap:8px;align-items:center;">
+             <button type="button" class="qty-dec" data-line-id="${line.id}">−</button>
+             <input type="number" min="1" value="${line.qty}" data-line-id="${line.id}" class="qty-input" style="width:80px"/>
+             <button type="button" class="qty-inc" data-line-id="${line.id}">+</button>
+           </div>
+         </td>` +
+        `<td>₹${lineTotal}</td>` +
+        `<td><button type="button" class="remove-btn" data-line-id="${line.id}">Remove</button></td>`;
+      body.appendChild(tr);
+    });
+
+    totalBox.textContent = `Subtotal: ₹${subtotal}`;
+    window.pushEvent && window.pushEvent('view_cart', {
+      value: subtotal,
+      currency:'INR',
+      items: window.Cart.ga4Items()
+    });
+  }
+
+  // Safe fetch helpers
+  function getCart() {
+    try { return window.Cart.get(); } catch(e){ return { items: [] }; }
+  }
+  function findLineByIdOrSku(lineId) {
+    const cart = getCart();
+    const byId = cart.items.find(x => x.id === lineId);
+    if (byId) return byId;
+    // Fallback: try matching the part before the first '#'
+    if (lineId && lineId.includes('#')) {
+      const skuCandidate = lineId.split('#')[0];
+      const bySku = cart.items.find(x => x.sku === skuCandidate);
+      if (bySku) return bySku;
+    }
+    return null;
+  }
+
+  render();
+
+  // Re-render on storage changes across tabs
+  window.addEventListener('storage', function(e){
+    if (e.key === KEY) render();
+  });
+
+  // Quantity change via typing
+  body.addEventListener('input', function(e){
+    const input = e.target.closest('.qty-input');
+    if (!input) return;
+
+    const lineId = input.dataset.lineId || input.getAttribute('data-line-id') || '';
+    const line = findLineByIdOrSku(lineId);
+    if (!line) { console.warn('Line not found for input set', lineId); return; }
+
+    const qty = Math.max(1, Number(input.value || '1'));
+    window.Cart.update(line.id, qty);
+    console.debug('qty set', { lineId: line.id, qty });
+    render();
+  });
+
+  // Click delegation: + / − / Remove
+  body.addEventListener('click', function(e){
+    const incBtn = e.target.closest('button.qty-inc');
+    const decBtn = e.target.closest('button.qty-dec');
+    const remBtn = e.target.closest('button.remove-btn');
+
+    if (incBtn) {
+      const lineId = incBtn.dataset.lineId || incBtn.getAttribute('data-line-id') || '';
+      const line = findLineByIdOrSku(lineId);
+      if (!line) { console.warn('Line not found for qty-inc', lineId); return; }
+      window.Cart.update(line.id, line.qty + 1);
+      console.debug('qty++', { lineId: line.id });
+      render();
+      return;
+    }
+    if (decBtn) {
+      const lineId = decBtn.dataset.lineId || decBtn.getAttribute('data-line-id') || '';
+      const line = findLineByIdOrSku(lineId);
+      if (!line) { console.warn('Line not found for qty-dec', lineId); return; }
+      window.Cart.update(line.id, Math.max(1, line.qty - 1));
+      console.debug('qty--', { lineId: line.id });
+      render();
+      return;
+    }
+    if (remBtn) {
+      const lineId = remBtn.dataset.lineId || remBtn.getAttribute('data-line-id') || '';
+      const line = findLineByIdOrSku(lineId);
+      if (!line) { console.warn('Line not found for remove', lineId); return; }
+
+      const item = window.CATALOG[line.sku];
+      if (item) {
+        window.pushEvent && window.pushEvent('remove_from_cart', {
+          items: [{
+            item_id: item.sku,
+            item_name: item.name,
+            item_category: item.category,
+            price: item.price,
+            currency: item.currency
+          }]
+        });
+      }
+      window.Cart.remove(line.id);
+      console.debug('removed', { lineId: line.id });
+      render();
+      return;
+    }
+  });
+
+  // Checkout
+  const checkoutBtn = document.getElementById('cart-checkout');
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener('click', function(){
+      window.pushEvent && window.pushEvent('begin_checkout', { items: window.Cart.ga4Items() });
+      location.href = 'checkout.html';
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
+``

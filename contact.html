@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact | E‑commerce Starter</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Data Layer + GTM loader -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    window.digitalData = window.digitalData || {};
+  </script>
+  
+</head>
+<body>
+  
+
+  <!-- Header & Nav -->
+  <header>
+    <div class="container">
+      <h1>E‑commerce Starter</h1>
+      <nav class="site-nav">
+        <a href="index.html">Home</a>
+        <a href="t-shirts/index.html">T‑Shirts</a>
+        <a href="sneakers/index.html">Sneakers</a>
+        <a href="backpacks/index.html">Backpacks</a>
+        <a href="about.html" id="about-link" class="nav-link">About Us</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <a href="cart.html" class="nav-link">Cart</a>
+        <button class="cta" data-cta-location="header" id="shop-now-btn">Shop Now</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page Context -->
+  <script>
+    window.digitalData.page = {
+      pageInfo: {
+        pageName: 'contact',
+        title: 'Contact | GA4 E‑commerce Starter',
+        destinationURL: location.href,
+        referringURL: document.referrer,
+        internalPageName: 'contact',
+        pageID: 'ga4-starter:contact',
+        sysEnv: navigator.userAgent
+      },
+      category: { type: 'content', primaryCategory: 'contact' },
+      language: 'en'
+    };
+    dataLayer.push({
+      event: 'page_context',
+      page_name: window.digitalData.page.pageInfo.pageName,
+      page_title: window.digitalData.page.pageInfo.title,
+      page_category: window.digitalData.page.category.primaryCategory,
+      page_id: window.digitalData.page.pageInfo.pageID
+    });
+  </script>
+
+  <!-- Main -->
+  <main class="container">
+    <section class="contact" id="contact">
+      <h2>Contact Us</h2>
+
+      <form id="contact-form">
+        <label>Subject
+          <input type="text" name="subject" placeholder="Subject" required />
+        </label>
+
+        <label>Your message
+          <textarea name="message" placeholder="Your message" required></textarea>
+        </label>
+
+        <!-- Optional: contact details -->
+        <label>Your email
+          <input type="email" name="email" placeholder="you@example.com" />
+        </label>
+
+        <button type="submit" class="form-submit" data-form-name="contact">Send</button>
+      </form>
+
+      <!-- Optional: contact info panel -->
+      <section style="margin-top: 24px;">
+        <p class="hint" style="color:#666">
+          We typically respond within 1–2 business days.
+        </p>
+      </section>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-container">
+      <a href="https://www.adidas.com" class="outbound-link" target="_blank" rel="noopener">Adidas Official</a>
+      <button class="cta" data-cta-location="footer" id="subscribe-btn">Subscribe</button>
+      <p>© 2025 Adobe E‑commerce</p>
+    </div>
+  </footer>
+
+  <!-- JS (GA4 events wiring) -->
+  <script src="app.js"></script>
+</body>
+</html>
+``

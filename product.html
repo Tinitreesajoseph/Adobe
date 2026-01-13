@@ -1,0 +1,227 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Product | E‑commerce Starter</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Data Layer (for GTM/GA4) -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    window.digitalData = window.digitalData || {};
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>E‑commerce Starter</h1>
+      <nav class="site-nav">
+        <a href="index.html">Home</a>
+        <a href="t-shirts/index.html">T‑Shirts</a>
+        <a href="sneakers/index.html">Sneakers</a>
+        <a href="backpacks/index.html">Backpacks</a>
+        <a href="about.html" class="nav-link">About Us</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <a href="cart.html" class="nav-link">Cart</a>
+        <button class="cta" data-cta-location="header" id="shop-now-btn">Shop Now</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="product-detail">
+      <div class="gallery">
+        <!-- Main image is injected via JS -->
+        <img id="pd-main" alt="Product image" src="" />
+        <div class="thumbs" id="pd-thumbs"></div>
+      </div>
+      <div class="info">
+        <h2 id="pd-name">Product Name</h2>
+        <p class="price" id="pd-price">₹0</p>
+        <p id="pd-desc">Description</p>
+
+        <div id="pd-variants"></div>
+
+        <div class="qty-row">
+          <label for="pd-qty">Quantity</label>
+          <input type="number" id="pd-qty" min="1" value="1" style="width:100px" />
+        </div>
+
+        <div class="buy-row">
+          <button id="pd-add">Add to Cart</button>
+          <button id="pd-buy">Buy Now</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-container">
+      <a href="https://www.adidas.com" class="outbound-link" target="_blank" rel="noopener">Adidas Official</a>
+      <button class="cta" data-cta-location="footer" id="subscribe-btn">Subscribe</button>
+      <p>© 2025 Adobe E‑commerce</p>
+    </div>
+  </footer>
+
+  <!-- Scripts: catalog first, then app logic -->
+  <script src="catalog.js"></script>
+  <script src="app.js"></script>
+
+  <!-- Product bootstrap -->
+  <script>
+    (function(){
+      function getParam(name){
+        const u = new URL(location.href);
+        return u.searchParams.get(name);
+      }
+      const sku = getParam('sku');
+
+      const elName   = document.getElementById('pd-name');
+      const elPrice  = document.getElementById('pd-price');
+      const elDesc   = document.getElementById('pd-desc');
+      const elMain   = document.getElementById('pd-main');
+      const elThumbs = document.getElementById('pd-thumbs');
+      const elVars   = document.getElementById('pd-variants');
+
+      if (!sku || !window.CATALOG || !window.CATALOG[sku]) {
+        elName.textContent = 'Product not found';
+        elMain.alt = 'Product not found';
+        elMain.src = 'assets/placeholder.png'; // optional fallback
+        return;
+      }
+
+      const item = window.CATALOG[sku];
+
+      // Page context (for GTM/GA4)
+      window.digitalData.page = {
+        pageInfo: {
+          pageName: 'product:' + item.sku,
+          title: item.name + ' | GA4 E‑commerce Starter',
+          destinationURL: location.href,
+          referringURL: document.referrer,
+          internalPageName: 'product',
+          pageID: 'ga4-starter:product:' + item.sku,
+          sysEnv: navigator.userAgent
+        },
+        category: { type: 'product', primaryCategory: item.category },
+        language: 'en'
+      };
+      dataLayer.push({
+        event: 'page_context',
+        page_name: window.digitalData.page.pageInfo.pageName,
+        page_title: window.digitalData.page.pageInfo.title,
+        page_category: window.digitalData.page.category.primaryCategory,
+        page_id: window.digitalData.page.pageInfo.pageID
+      });
+
+      // Render product
+      elName.textContent = item.name;
+      elPrice.textContent = '₹' + item.price;
+      elDesc.textContent = item.description;
+
+      // Main image + alt
+      const mainSrc = (item.images && item.images.length) ? item.images[0] : item.image;
+      elMain.src = mainSrc;
+      elMain.alt = item.name;
+
+      // Thumbnails
+      elThumbs.innerHTML = '';
+      const thumbs = (item.images && item.images.length) ? item.images : [item.image];
+      thumbs.forEach(function(src){
+        const im = document.createElement('img');
+        im.src = src;
+        im.alt = item.name + ' thumbnail';
+        im.addEventListener('click', function(){ elMain.src = src; });
+        elThumbs.appendChild(im);
+      });
+
+      // Variants
+      elVars.innerHTML = '';
+      function addSelect(label, key, opts){
+        const wrap = document.createElement('div');
+        wrap.className = 'variant-row';
+        const lab = document.createElement('label');
+        lab.textContent = label;
+        const sel = document.createElement('select');
+        sel.id = 'var-' + key;
+        opts.forEach(function(o){
+          const op = document.createElement('option');
+          op.value = o;
+          op.textContent = o;
+          sel.appendChild(op);
+        });
+        wrap.appendChild(lab);
+        wrap.appendChild(sel);
+        elVars.appendChild(wrap);
+      }
+      const v = item.variants || {};
+      if (v.size)  addSelect('Size',  'size',  v.size);
+      if (v.color) addSelect('Color', 'color', v.color);
+
+      // GA4: view_item
+      window.pushEvent && window.pushEvent('view_item', {
+        items: [{
+          item_id: item.sku,
+          item_name: item.name,
+          item_category: item.category,
+          price: item.price,
+          currency: item.currency
+        }]
+      });
+
+      // Add to Cart
+      document.getElementById('pd-add').addEventListener('click', function(){
+        const qty = Math.max(1, Number(document.getElementById('pd-qty').value || '1'));
+        const variant = {
+          size:  document.getElementById('var-size')  ? document.getElementById('var-size').value  : null,
+          color: document.getElementById('var-color') ? document.getElementById('var-color').value : null
+        };
+        if (window.Cart) { window.Cart.add(item.sku, qty, variant); }
+        window.pushEvent && window.pushEvent('add_to_cart', {
+          items: [{
+            item_id: item.sku,
+            item_name: item.name,
+            item_category: item.category,
+            price: item.price,
+            currency: item.currency,
+            quantity: qty
+          }]
+        });
+        
+        console.log('Adding to cart:', {
+          sku: item.sku,
+          qty,
+          variant,
+          existsCatalog: !!window.CATALOG[item.sku],
+          cartBefore: window.Cart.get()
+        });
+
+        alert('Added to cart');
+        console.log('Cart after add:', window.Cart.get());
+      });
+
+      // Buy Now
+      document.getElementById('pd-buy').addEventListener('click', function(){
+        const qty = Math.max(1, Number(document.getElementById('pd-qty').value || '1'));
+        
+        const variant = {
+          size: document.getElementById('var-size')?.value || null,
+          color: document.getElementById('var-color')?.value || null
+        };
+        window.Cart.add(item.sku, qty, variant);
+        if (window.Cart) { window.Cart.add(item.sku, qty, variant); }
+        location.href = 'checkout.html';
+      });
+
+      // Optional: fallback if main image fails
+      elMain.onerror = function(){
+        elMain.src = 'assets/placeholder.png';
+      };
+    })();
+  </script>
+</body>
+</html>
