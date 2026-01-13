@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Thank You | E‑commerce Starter</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Data Layer bootstrap -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    window.digitalData = window.digitalData || {};
+  </script>
+
+  <!-- (Optional) GTM loader: replace with your container ID -->
+  <!--
+  <script>
+    (function(w,d,s,l,i){
+      w[l]=w[l]||[];
+      w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+      var f=d.getElementsByTagName(s)[0], j=d.createElement(s), dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true; j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window, document, 'script', 'dataLayer', 'GTM-XXXXXXX');
+  </script>
+  -->
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>E‑commerce Starter</h1>
+      <nav class="site-nav">
+        <a href="index.html">Home</a>
+        <a href="t-shirtsindex.html">T‑Shirts</a>
+        <a href="sneakerindex.html">Sneakers</a>
+        <a href="backpackindex.html">Backpacks</a>
+        <a href="about.html" class="nav-link">About Us</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <a href="cart.html" class="nav-link">Cart</a>
+        <button class="cta" data-cta-location="header" id="shop-now-btn">Shop Now</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="thank-you">
+      <h2>Thank you for your order!</h2>
+      <p>Your order has been placed successfully.</p>
+
+      <div class="order-meta">
+        <strong>Order ID:</strong> <span id="order-id">—</span>
+      </div>
+
+      <div id="order-summary" class="order-summary">
+        <!-- Populated by script -->
+      </div>
+
+      <div class="actions">
+        <a href="index.html"><button>Continue Shopping</button></a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-container">
+      <a href="https://www.adidas.com" class="outbound-link" target="_blank" rel="noopener">Adidas Official</a>
+      <button class="cta" data-cta-location="footer" id="subscribe-btn">Subscribe</button>
+      <p>© 2025 Adobe E‑commerce</p>
+    </div>
+  </footer>
+
+  <!-- Load catalog (for names/prices if needed) and your cart/helpers, optional -->
+  <script src="catalog.js"></script>
+  <script src="app.js"></script>
+
+  <script>
+    (function(){
+      // ---------- Helpers ----------
+      function getParam(name) {
+        const u = new URL(location.href);
+        return u.searchParams.get(name);
+      }
+      function readLastPurchase() {
+        try {
+          const raw = localStorage.getItem('last_purchase');
+          return raw ? JSON.parse(raw) : null;
+        } catch(e){ return null; }
+      }
+      function readLastOrderId() {
+        try { return localStorage.getItem('last_order_id') || ''; }
+        catch(e){ return ''; }
+      }
+      function setIdempotency(orderId) {
+        try { sessionStorage.setItem('purchase_pushed_' + orderId, '1'); } catch(e){}
+      }
+      function alreadyPushed(orderId) {
+        try { return sessionStorage.getItem('purchase_pushed_' + orderId) === '1'; }
+        catch(e){ return false; }
+      }
+
+      // ---------- Resolve Order ID + Snapshot ----------
+      let orderId = getParam('order') || readLastOrderId();
+      let snapshot = readLastPurchase();
+
+      // If snapshot missing but we still have Cart (fallback), rebuild minimal view
+      // Note: Typically Cart was cleared on checkout; snapshot is recommended.
+      if (!snapshot) {
+        const items = (window.Cart && typeof window.Cart.ga4Items === 'function') ? window.Cart.ga4Items() : [];
+        const total = items.reduce((s,i)=> s + (Number(i.price)||0)*(Number(i.quantity)||1), 0);
+        snapshot = { orderId, items, total, currency: 'INR', tax: 0, shipping: 0 };
+      }
+
+      // ---------- Page context ----------
+      window.digitalData.page = {
+        pageInfo: {
+          pageName: 'order_confirmation',
+          title: 'Thank You | E‑commerce Starter',
+          destinationURL: location.href,
+          referringURL: document.referrer || '',
+          internalPageName: 'order_confirmation',
+          pageID: 'ga4-starter:order_confirmation',
+          sysEnv: navigator.userAgent || ''
+        },
+        category: { type: 'post_purchase', primaryCategory: 'thank_you' },
+        language: 'en'
+      };
+
+      window.dataLayer.push({
+        event: 'page_context',
+        page_name: window.digitalData.page.pageInfo.pageName,
+        page_title: window.digitalData.page.pageInfo.title,
+        page_category: window.digitalData.page.category.primaryCategory,
+        page_id: window.digitalData.page.pageInfo.pageID,
+        page_language: window.digitalData.page.language
+      });
+
+      // ---------- Render Order UI ----------
+      document.getElementById('order-id').textContent = orderId || 'Unknown';
+
+      const summaryEl = document.getElementById('order-summary');
+      const items = Array.isArray(snapshot.items) ? snapshot.items : [];
+      const currency = snapshot.currency || 'INR';
+      const total = Number(snapshot.total || 0);
+      const tax = Number(snapshot.tax || 0);
+      const shipping = Number(snapshot.shipping || 0);
+
+      if (summaryEl) {
+        const lines = items.map(i => {
+          const name = i.item_name || i.name || i.item_id || 'Item';
+          const qty = Number(i.quantity || 1);
+          const price = Number(i.price || 0);
+          return `<div>${name} x ${qty} — ₹${qty * price}</div>`;
+        }).join('');
+        summaryEl.innerHTML = `
+          <h3>Order Summary</h3>
+          ${lines || '<em>No items found in this order.</em>'}
+          <hr/>
+          <div><strong>Subtotal:</strong> ₹${total}</div>
+          <div><strong>Tax:</strong> ₹${tax}</div>
+          <div><strong>Shipping:</strong> ₹${shipping}</div>
+          <div><strong>Grand Total:</strong> ₹${total + tax + shipping}</div>
+        `;
+      }
+
+      // ---------- digitalData.transaction ----------
+      window.digitalData.transaction = {
+        transactionID: orderId || ('ORD-' + Date.now()),
+        currency: currency,
+        total: total,
+        tax: tax,
+        shipping: shipping,
+        paymentMethod: 'Card',       // set according to your checkout flow
+        shippingMethod: 'Standard',  // set according to your checkout flow
+        items: items.map(i => ({
+          product: {
+            sku: i.item_id,
+            name: i.item_name || i.name || i.item_id,
+            category: i.item_category || 'General'
+          },
+          price: Number(i.price || 0),
+          quantity: Number(i.quantity || 1)
+        }))
+      };
+
+      // ---------- Push GA4 purchase (idempotent) ----------
+      // We only push if we have an orderId and we haven't pushed it in this session yet
+      if (orderId && !alreadyPushed(orderId)) {
+        window.dataLayer.push({
+          event: 'purchase',
+          transaction_id: orderId,
+          currency: currency,
+          value: total,
+          tax: tax,
+          shipping: shipping,
+          items: items
+        });
+
+        // Optional: trigger a custom event for Adobe Launch rules
+        window.dataLayer.push({
+          event: 'transaction_ready',
+          transaction: window.digitalData.transaction
+        });
+
+        setIdempotency(orderId);
+      }
+
+      // ---------- Optional cleanup ----------
+      // If you do not need the snapshot after this, you can clear it:
+      // try { localStorage.removeItem('last_purchase'); } catch(e){}
+      // Do not remove last_order_id if you want to show it elsewhere later.
+    })();
+  </script>
+</body>
+</html>
