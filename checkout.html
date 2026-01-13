@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,135 +6,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Checkout | E‑commerce Starter</title>
   <link rel="stylesheet" href="styles.css" />
-  <script>window.dataLayer = window.dataLayer || []; window.digitalData = window.digitalData || {};</script>
-  
-<script>
-  (function(){
-    // ---- Page context (keep object structure as you requested) ----
-    window.digitalData.page = {
-      pageInfo: {
-        pageName:'checkout',
-        title:'Checkout | E‑commerce Starter',
-        destinationURL: location.href,
-        referringURL: document.referrer || '',
-        internalPageName:'checkout',
-        pageID:'ga4-starter:checkout',
-        sysEnv: navigator.userAgent || ''
-      },
-      category:{ type:'checkout', primaryCategory:'checkout' },
-      language:'en'
-    };
 
-    // GTM page context
-    window.dataLayer.push({
-      event:'page_context',
-      page_name: window.digitalData.page.pageInfo.pageName,
-      page_title: window.digitalData.page.pageInfo.title,
-      page_category: window.digitalData.page.category.primaryCategory,
-      page_id: window.digitalData.page.pageInfo.pageID,
-      page_language: window.digitalData.page.language
-    });
+  <!-- Data Layer bootstrap -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    window.digitalData = window.digitalData || {};
+  </script>
 
-    // ---- Order summary rendering + checkout events ----
-    const summaryEl = document.getElementById('order-summary');
-
-    // Pull GA4-style items from your cart helper (defined in app.js/catalog.js)
-    const items = (window.Cart && typeof window.Cart.ga4Items === 'function') ? window.Cart.ga4Items() : [];
-    let total = 0;
-    items.forEach(i => {
-      const price = Number(i.price) || 0;
-      const qty = Number(i.quantity) || 1;
-      total += price * qty;
-    });
-
-    // Render summary (UI only)
-    if (summaryEl) {
-      const lines = items.map(i => {
-        const price = Number(i.price) || 0;
-        const qty = Number(i.quantity) || 1;
-        const line = price * qty;
-        const name = i.item_name || i.name || i.item_id || 'Item';
-        return `<div>${name} x ${qty} — ₹${line}</div>`;
-      }).join('');
-      summaryEl.innerHTML =
-        `<h3>Order Summary</h3>${lines || '<em>No items in cart.</em>'}` +
-        `<hr/><strong>Total: ₹${total}</strong>`;
-    }
-
-    // Push begin_checkout with items
-    window.dataLayer.push({
-      event: 'begin_checkout',
-      currency: 'INR',
-      value: total,
-      items: items
-    });
-
-    // ---- Button bindings: shipping, payment, purchase ----
-    const shipBtn = document.getElementById('save-shipping');
-    const payBtn  = document.getElementById('save-payment');
-    const placeBtn= document.getElementById('place-order');
-
-    if (shipBtn) {
-      shipBtn.addEventListener('click', function(){
-        // Do not push PII; only shipping tier/summary data
-        window.dataLayer.push({
-          event: 'add_shipping_info',
-          shipping_tier: 'Standard',
-          currency: 'INR',
-          value: total,
-          items: items
-        });
-        alert('Shipping info saved (demo).');
-      });
-    }
-
-    if (payBtn) {
-      payBtn.addEventListener('click', function(){
-        // Do not push card details; only payment type
-        window.dataLayer.push({
-          event: 'add_payment_info',
-          payment_type: 'Card',
-          currency: 'INR',
-          value: total,
-          items: items
-        });
-        alert('Payment info saved (demo).');
-      });
-    }
-
-    if (placeBtn) {
-      placeBtn.addEventListener('click', function(){
-        // Generate a simple transaction id for demo
-        const txnId = 'TXN_' + Date.now();
-
-        // Push GA4 purchase event
-        window.dataLayer.push({
-          event: 'purchase',
-          transaction_id: txnId,
-          currency: 'INR',
-          value: total,
-          tax: 0,            // Add actual tax if applicable
-          shipping: 0,       // Add shipping cost if available
-          coupon: undefined, // Include coupon code if used
-          items: items
-        });
-
-        // Clear cart and redirect (demo behavior)
-        if (window.Cart && typeof window.Cart.clear === 'function') {
-          window.Cart.clear();
-        }
-        alert('Order placed! (demo)');
-        // Typically redirect to a thank-you page:
-        // location.href = 'thankyou.html?order=' + encodeURIComponent(txnId);
-        // For your current flow:
-        location.href = 'index.html';
-      });
-    }
-  })();
-</script>
-
-
-
+  <!-- Optional: GTM loader (replace with your GTM ID if you use GTM on checkout) -->
+  <!--
+  <script>
+    (function(w,d,s,l,i){
+      w[l]=w[l]||[];
+      w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+      var f=d.getElementsByTagName(s)[0], j=d.createElement(s), dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true; j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window, document, 'script', 'dataLayer', 'GTM-XXXXXXX');
+  </script>
+  -->
 </head>
 <body>
   <header>
@@ -158,19 +49,19 @@
       <div class="checkout-grid">
         <form id="shipping-form">
           <h3>Shipping Info</h3>
-          <label>Full Name<input type="text" name="full_name" required /></label>
-          <label>Address<input type="text" name="address" required /></label>
-          <label>City<input type="text" name="city" required /></label>
-          <label>Postal Code<input type="text" name="postal" required /></label>
-          <label>Phone<input type="tel" name="phone" required /></label>
+          <label>Full Name <input type="text" name="full_name" required /></label>
+          <label>Address <input type="text" name="address" required /></label>
+          <label>City <input type="text" name="city" required /></label>
+          <label>Postal Code <input type="text" name="postal" required /></label>
+          <label>Phone <input type="tel" name="phone" required /></label>
           <button type="button" id="save-shipping">Save Shipping</button>
         </form>
 
         <form id="payment-form">
           <h3>Payment Info</h3>
-          <label>Card Number<input type="text" name="card" placeholder="1111 2222 3333 4444" required /></label>
-          <label>Expiry<input type="text" name="expiry" placeholder="MM/YY" required /></label>
-          <label>CVV<input type="text" name="cvv" placeholder="123" required /></label>
+          <label>Card Number <input type="text" name="card" placeholder="1111 2222 3333 4444" required /></label>
+          <label>Expiry <input type="text" name="expiry" placeholder="MM/YY" required /></label>
+          <label>CVV <input type="text" name="cvv" placeholder="123" required /></label>
           <button type="button" id="save-payment">Save Payment</button>
         </form>
       </div>
@@ -191,22 +82,159 @@
     </div>
   </footer>
 
+  <!-- Load catalog and cart/GA4 wiring -->
   <script src="catalog.js"></script>
   <script src="app.js"></script>
+
+  <!-- Checkout page logic -->
   <script>
     (function(){
-      window.digitalData.page = { pageInfo: { pageName:'checkout', title:'Checkout | E‑commerce Starter', destinationURL: location.href, referringURL: document.referrer, internalPageName:'checkout', pageID:'ga4-starter:checkout', sysEnv:navigator.userAgent }, category:{ type:'checkout', primaryCategory:'checkout' }, language:'en' };
-      dataLayer.push({ event:'page_context', page_name:'checkout', page_title:'Checkout | E‑commerce Starter', page_category:'checkout', page_id:'ga4-starter:checkout' });
+      // ---- Page context (object style) ----
+      window.digitalData.page = {
+        pageInfo: {
+          pageName:'checkout',
+          title:'Checkout | E‑commerce Starter',
+          destinationURL: location.href,
+          referringURL: document.referrer || '',
+          internalPageName:'checkout',
+          pageID:'ga4-starter:checkout',
+          sysEnv: navigator.userAgent || ''
+        },
+        category:{ type:'checkout', primaryCategory:'checkout' },
+        language:'en'
+      };
 
-      const summary = document.getElementById('order-summary');
-      const items = window.Cart.ga4Items();
-      let total = 0; items.forEach(i => total += (i.price||0) * (i.quantity||1));
-      summary.innerHTML = '<h3>Order Summary</h3>' + items.map(i=>`<div>${i.item_name} x ${i.quantity} — ₹${(i.price||0) * (i.quantity||1)}</div>`).join('') + `<hr/><strong>Total: ₹${total}</strong>`;
+      // Push page_context
+      window.dataLayer.push({
+        event:'page_context',
+        page_name: window.digitalData.page.pageInfo.pageName,
+        page_title: window.digitalData.page.pageInfo.title,
+        page_category: window.digitalData.page.category.primaryCategory,
+        page_id: window.digitalData.page.pageInfo.pageID,
+        page_language: window.digitalData.page.language
+      });
 
-      dataLayer.push({ event:'begin_checkout', items: items });
-      document.getElementById('save-shipping').addEventListener('click', function(){ dataLayer.push({ event:'add_shipping_info', shipping_tier:'Standard', items: items }); alert('Shipping info saved (demo).'); });
-      document.getElementById('save-payment').addEventListener('click', function(){ dataLayer.push({ event:'add_payment_info', payment_type:'Card', items: items }); alert('Payment info saved (demo).'); });
-      document.getElementById('place-order').addEventListener('click', function(){ const txn = 'TXN_' + Date.now(); dataLayer.push({ event:'purchase', transaction_id: txn, value: total, currency:'INR', items: items }); window.Cart.clear(); alert('Order placed! (demo)'); location.href = 'index.html'; });
+      // ---- Build order summary from Cart ----
+      const summaryEl = document.getElementById('order-summary');
+      const items = (window.Cart && typeof window.Cart.ga4Items === 'function') ? window.Cart.ga4Items() : [];
+      const total = (window.Cart && typeof window.Cart.total === 'function') ? window.Cart.total() : 0;
+
+      if (summaryEl) {
+        const lines = items.map(i => {
+          const line = (Number(i.price) || 0) * (Number(i.quantity) || 1);
+          const name = i.item_name || i.name || i.item_id || 'Item';
+          return `<div>${name} x ${i.quantity} — ₹${line}</div>`;
+        }).join('');
+        summaryEl.innerHTML =
+          `<h3>Order Summary</h3>${lines || '<em>No items in cart.</em>'}` +
+          `<hr/><strong>Total: ₹${total}</strong>`;
+      }
+
+      // Begin checkout (GA4)
+      window.dataLayer.push({
+        event: 'begin_checkout',
+        currency: 'INR',
+        value: total,
+        items: items
+      });
+
+      // ---- Button bindings ----
+      const shipBtn = document.getElementById('save-shipping');
+      const payBtn  = document.getElementById('save-payment');
+      const placeBtn= document.getElementById('place-order');
+
+      if (shipBtn) {
+        shipBtn.addEventListener('click', function(){
+          window.dataLayer.push({
+            event: 'add_shipping_info',
+            shipping_tier: 'Standard',
+            currency: 'INR',
+            value: total,
+            items: items
+          });
+          alert('Shipping info saved (demo).');
+        });
+      }
+
+      if (payBtn) {
+        payBtn.addEventListener('click', function(){
+          window.dataLayer.push({
+            event: 'add_payment_info',
+            payment_type: 'Card',
+            currency: 'INR',
+            value: total,
+            items: items
+          });
+          alert('Payment info saved (demo).');
+        });
+      }
+
+      // ---- Order ID utilities (in case app.js doesn't have them) ----
+      function uuidv4() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          const r = Math.random() * 16 | 0;
+          const v = c === 'x' ? r : (r & 0x3 | 0x8);
+          return v.toString(16);
+        });
+      }
+      function generateOrderId() { return 'ORD-' + uuidv4(); }
+      function saveLastOrderId(orderId) {
+        try { localStorage.setItem('last_order_id', orderId); } catch(e) {}
+      }
+
+      if (placeBtn) {
+        placeBtn.addEventListener('click', function(){
+          // Generate and persist order ID
+          const orderId = (window.generateOrderId ? window.generateOrderId() : generateOrderId());
+          (window.saveLastOrderId ? window.saveLastOrderId(orderId) : saveLastOrderId(orderId));
+
+          // Build Adobe-friendly transaction object
+          window.digitalData.transaction = {
+            transactionID: orderId,
+            currency: 'INR',
+            total: total,
+            tax: 0,
+            shipping: 0,
+            paymentMethod: 'Card',
+            shippingMethod: 'Standard',
+            items: items.map(i => ({
+              product: {
+                sku: i.item_id,
+                name: i.item_name,
+                category: i.item_category
+              },
+              price: i.price,
+              quantity: i.quantity
+            }))
+          };
+
+          // Push GA4 purchase
+          window.dataLayer.push({
+            event: 'purchase',
+            transaction_id: orderId,
+            currency: 'INR',
+            value: total,
+            tax: 0,
+            shipping: 0,
+            items: items
+          });
+
+          // Optional: notify Adobe Launch rules
+          window.dataLayer.push({
+            event: 'transaction_ready',
+            transaction: window.digitalData.transaction
+          });
+
+          // Clear cart and redirect
+          if (window.Cart && typeof window.Cart.clear === 'function') {
+            window.Cart.clear();
+          }
+          alert(`Order placed! (demo) ID: ${orderId}`);
+          // In production, redirect to a thank-you page:
+          // location.href = 'thankyou.html?order=' + encodeURIComponent(orderId);
+          location.href = 'index.html';
+        });
+      }
     })();
   </script>
 </body>
