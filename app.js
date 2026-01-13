@@ -19,31 +19,7 @@
     } catch(e) { /* ignore */ }
   })();
 
-// --- Order ID utilities (drop into app.js) ---
-(function(){
-  // Generate a simple order id, e.g., ORD-20260113-104512-4821
-  window.generateOrderId = function() {
-    const dt = new Date();
-    const pad = (n) => String(n).padStart(2, '0');
-    const yyyy = dt.getFullYear();
-    const mm = pad(dt.getMonth() + 1);
-    const dd = pad(dt.getDate());
-    const hh = pad(dt.getHours());
-    const min = pad(dt.getMinutes());
-    const ss = pad(dt.getSeconds());
-    const rand = Math.floor(Math.random() * 10000); // 0-9999
-    return `ORD-${yyyy}${mm}${dd}-${hh}${min}${ss}-${rand}`;
-  };
 
-  // Persist last order id (optional, for thank-you page or debug)
-  const LS_ORDER_KEY = 'last_order_id';
-  window.saveLastOrderId = function(orderId) {
-    try { localStorage.setItem(LS_ORDER_KEY, orderId); } catch(e) {}
-  };
-  window.getLastOrderId = function() {
-    try { return localStorage.getItem(LS_ORDER_KEY) || ''; } catch(e) { return ''; }
-  };
-})();
 
   // ---- Storage helpers ----
   function readLS() {
